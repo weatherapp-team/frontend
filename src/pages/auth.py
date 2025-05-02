@@ -1,34 +1,35 @@
-from streamlit_cookies_manager import EncryptedCookieManager
 import streamlit as st
+from extra_streamlit_components import CookieManager
 import time
-import os
-from utils.token import unauthorized_only, save_token
+import requests
 
+cookie_manager = CookieManager()
 
-def handle_click(username: str, password: str):
-    if st.session_state.submitted:
-        return
-    
-    st.session_state.submitted = True
-
-    save_token('hello')
-
-    time.sleep(0.3)
-
-    st.session_state.submitted = False
-
-    st.switch_page("pages/home.py")
-
-@unauthorized_only
-def authpage():
-    if 'submitted' not in st.session_state:
-        st.session_state.submitted = False
+def login_page():
     st.title("Authorize", anchor=False)
-    st.write("To continue, please log in")
 
+    # Input fields
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    if st.button("Login", disabled=st.session_state.submitted):
-        handle_click(username, password)
 
-authpage()
+    if st.button("Submit"):
+        result = requests.post("http://localhost:8000/login", json={
+            "username": username,
+            "password": password,
+        })
+        if result.status_code == 200:
+            cookie_manager.set("token", result.json()["access_token"], max_age=3600)
+            time.sleep(3)
+            st.success("Login successful! Redirecting...")
+            st.rerun()
+        else:
+            st.error(result.json()["detail"])
+
+    cookies = cookie_manager.get_all()
+
+    if cookies.get("token"):
+        st.switch_page("pages/dashboard.py")
+    st.write("Current Cookies:", cookies)
+
+if __name__ == "__main__":
+    login_page()
