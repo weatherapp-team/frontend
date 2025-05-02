@@ -15,12 +15,16 @@ def register_page():
     full_name = st.text_input("Full name")
 
     if st.button("Register"):
-        result = requests.post("http://localhost:8000/auth/register", json={
-            "username": username,
-            "password": password,
-            "email": email,
-            "full_name": full_name
-        })
+        result = requests.post(
+            url="http://localhost:8000/auth/register",
+            json={
+                "username": username,
+                "password": password,
+                "email": email,
+                "full_name": full_name
+            },
+            timeout=30
+        )
         if result.status_code == 201:
             st.session_state["registered"] = True
             st.success("Registration successful! Redirecting...")

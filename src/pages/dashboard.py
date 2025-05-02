@@ -10,7 +10,8 @@ cookie_manager = CookieManager()
 def get_data(location: str, token: str):
     result = requests.get(
         url=f"http://localhost:8000/weather/{location}",
-        headers={'Authorization': f"Bearer {token}"}
+        headers={'Authorization': f"Bearer {token}"},
+        timeout=30
     )
     if result.status_code == 200:
         return result.json()

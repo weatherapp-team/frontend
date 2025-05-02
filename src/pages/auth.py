@@ -13,10 +13,14 @@ def login_page():
     password = st.text_input("Password", type="password")
 
     if st.button("Submit"):
-        result = requests.post("http://localhost:8000/auth/login", json={
-            "username": username,
-            "password": password,
-        })
+        result = requests.post(
+            url="http://localhost:8000/auth/login",
+            json={
+                "username": username,
+                "password": password,
+            },
+            timeout=30
+        )
         if result.status_code == 200:
             cookie_manager.set(
                 cookie="token",
