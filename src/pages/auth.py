@@ -5,6 +5,7 @@ import requests
 
 cookie_manager = CookieManager()
 
+
 def login_page():
     st.title("Authorize", anchor=False)
 
@@ -17,7 +18,11 @@ def login_page():
             "password": password,
         })
         if result.status_code == 200:
-            cookie_manager.set("token", result.json()["access_token"], max_age=3600)
+            cookie_manager.set(
+                cookie="token",
+                val=result.json()["access_token"],
+                max_age=3600
+            )
             time.sleep(3)
             st.success("Login successful! Redirecting...")
             st.rerun()
@@ -29,6 +34,7 @@ def login_page():
     if cookies.get("token"):
         st.switch_page("pages/dashboard.py")
     st.write("Current Cookies:", cookies)
+
 
 if __name__ == "__main__":
     login_page()
