@@ -8,7 +8,6 @@ cookie_manager = CookieManager()
 def login_page():
     st.title("Authorize", anchor=False)
 
-    # Input fields
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 

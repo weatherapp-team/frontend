@@ -9,13 +9,11 @@ def register_page():
     if "registered" not in st.session_state:
         st.session_state["registered"] = False
 
-    # Input fields
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
     email = st.text_input("Email")
     full_name = st.text_input("Full name")
 
-    # Submit button
     if st.button("Register"):
         result = requests.post("http://localhost:8000/auth/register", json={
             "username": username,
