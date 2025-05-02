@@ -1,7 +1,7 @@
 import streamlit as st
-from extra_streamlit_components import CookieManager
 import time
 import requests
+
 
 def register_page():
     st.title("Register", anchor=False)
@@ -29,10 +29,10 @@ def register_page():
         else:
             st.error(result.json()["detail"])
 
-
     if st.session_state["registered"]:
         st.session_state["registered"] = False
         st.switch_page("pages/auth.py")
+
 
 if __name__ == "__main__":
     register_page()
