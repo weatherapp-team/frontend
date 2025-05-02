@@ -17,7 +17,7 @@ def register_page():
 
     # Submit button
     if st.button("Register"):
-        result = requests.post("http://localhost:8000/register", json={
+        result = requests.post("http://localhost:8000/auth/register", json={
             "username": username,
             "password": password,
             "email": email,
