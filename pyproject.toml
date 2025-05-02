@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+streamlit = "^1.45.0"
+extra-streamlit-components = "^0.1.80"
+pytest = "^8.3.5"
 
 
 [build-system]
