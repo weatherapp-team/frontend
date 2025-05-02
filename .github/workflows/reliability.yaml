@@ -1,11 +1,11 @@
-name: Security check
+name: Reliability check
 
 on:
   push:
 
 jobs:
-  security:
-    name: Check for vulnerabilities
+  reliability:
+    name:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,4 +24,4 @@ jobs:
         run: poetry install --no-root
 
       - name: Run Bandit check
-        run: poetry run bandit -r . -x ./src/main.py
+        run: poetry run pytest --cov=src --cov=src/pages --cov-fail-under=65

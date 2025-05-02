@@ -3,7 +3,7 @@ name: Maintainability check
 on: push
 
 jobs:
-  test:
+  maintainability:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
         with:
           poetry-version: "1.7.1"
       - name: Install dependencies
-        run: poetry install; poetry add flake8
+        run: poetry install
       - name: Run flake8
         run: poetry run flake8
       - name: Run complexity threshold check
