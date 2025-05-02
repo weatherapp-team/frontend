@@ -13,7 +13,7 @@ def login_page():
     password = st.text_input("Password", type="password")
 
     if st.button("Submit"):
-        result = requests.post("http://localhost:8000/login", json={
+        result = requests.post("http://localhost:8000/auth/login", json={
             "username": username,
             "password": password,
         })
