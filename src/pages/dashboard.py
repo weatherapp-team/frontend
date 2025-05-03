@@ -89,10 +89,10 @@ def dashboard():
 
         st.markdown(f"**Last updated:** {last_updated}")
         st.map(
-            data=[{"lat": 1.23456789, "lon": -0.987654321}],
+            data=[weather],
             latitude="lat",
             longitude="lon",
-            zoom=4
+            zoom=11
         )
 
 
