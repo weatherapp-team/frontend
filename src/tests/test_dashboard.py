@@ -31,6 +31,8 @@ def mocked_requests_get(*args, **kwargs):
                     "wind_speed": 7.27,
                     "wind_deg": 7.27,
                     "timestamp": "2025-05-03T15:08:56.984512",
+                    "lat": 55.7522,
+                    "lon": 37.6156,
                     "sunrise": "2025-05-03T01:42:03Z",
                     "sunset": "2025-05-03T17:10:39Z"
                 }, 200)
@@ -91,8 +93,7 @@ class TestDashboard(unittest.TestCase):
             "Humidity": "51.0 %",
             "Pressure": "1003.0 hPa",
             "Wind speed": "7.27 m/s",
-            "Wind direction": "7.27 °"
-
+            "Wind direction": "N (7.27 °)"
         }
 
         for metric in at.metric:
