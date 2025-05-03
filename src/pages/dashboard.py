@@ -16,7 +16,8 @@ def get_data(location: str, token: str):
     if result.status_code == 200:
         return result.json()
     elif result.status_code == 401:
-        cookie_manager.delete("token")
+        if cookie_manager.get("token"):
+            cookie_manager.delete("token")
         time.sleep(1)
         st.switch_page("pages/auth.py")
     else:

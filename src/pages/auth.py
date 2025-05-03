@@ -27,8 +27,8 @@ def login_page():
                 val=result.json()["access_token"],
                 max_age=3600
             )
-            time.sleep(3)
             st.success("Login successful! Redirecting...")
+            time.sleep(3)
             st.rerun()
         else:
             st.error(result.json()["detail"])
@@ -37,7 +37,6 @@ def login_page():
 
     if cookies.get("token"):
         st.switch_page("pages/dashboard.py")
-    st.write("Current Cookies:", cookies)
 
 
 if __name__ == "__main__":
