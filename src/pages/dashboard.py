@@ -3,6 +3,7 @@ from extra_streamlit_components import CookieManager
 import requests
 from datetime import datetime
 import time
+from utilities.wind_direction import deg_to_direction
 
 cookie_manager = CookieManager()
 
@@ -63,7 +64,7 @@ def weather_humidity(weather):
 def weather_wind(weather):
     wind_speed, wind_direction = st.columns(2)
     wind_speed.metric("Wind speed", f"{weather['wind_speed']} m/s")
-    wind_direction.metric("Wind direction", f"{weather['wind_deg']} °")
+    wind_direction.metric("Wind direction", F"{deg_to_direction(weather['wind_deg'])} ({weather['wind_deg']} °)")
 
 
 def dashboard():
