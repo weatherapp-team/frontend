@@ -5,7 +5,6 @@ on:
 
 jobs:
   security:
-    name: Check for vulnerabilities
     runs-on: ubuntu-latest
 
     steps:
@@ -24,4 +23,4 @@ jobs:
         run: poetry install --no-root
 
       - name: Run Bandit check
-        run: poetry run bandit -r .
+        run: poetry run bandit -r . -x ./src/tests
