@@ -71,29 +71,30 @@ def dashboard():
 
     input = st.text_input("Location", value="Moscow")
 
-    weather = get_data(input, cookies.get("token"))
+    with st.spinner("Loading..."):
+        weather = get_data(input, cookies.get("token"))
 
-    if weather:
-        weather_base_info(weather)
+        if weather:
+            weather_base_info(weather)
 
-        weather_temp(weather)
+            weather_temp(weather)
 
-        weather_sun(weather)
+            weather_sun(weather)
 
-        weather_humidity(weather)
+            weather_humidity(weather)
 
-        weather_wind(weather)
+            weather_wind(weather)
 
-        timestamp = datetime.fromisoformat(weather['timestamp'])
-        last_updated = timestamp.strftime('%d.%m.%Y %H:%M:%S')
+            timestamp = datetime.fromisoformat(weather['timestamp'])
+            last_updated = timestamp.strftime('%d.%m.%Y %H:%M:%S')
 
-        st.markdown(f"**Last updated:** {last_updated}")
-        st.map(
-            data=[weather],
-            latitude="lat",
-            longitude="lon",
-            zoom=11
-        )
+            st.markdown(f"**Last updated:** {last_updated}")
+            st.map(
+                data=[weather],
+                latitude="lat",
+                longitude="lon",
+                zoom=11
+            )
 
 
 if __name__ == "__main__":
