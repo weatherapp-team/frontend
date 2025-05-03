@@ -94,8 +94,6 @@ def dashboard():
             longitude="lon",
             zoom=4
         )
-    else:
-        pass
 
 
 if __name__ == "__main__":
