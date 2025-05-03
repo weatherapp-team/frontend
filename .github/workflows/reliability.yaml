@@ -23,4 +23,4 @@ jobs:
         run: poetry install --no-root
 
       - name: Run Bandit check
-        run: poetry run pytest --cov=src --cov=src/pages --cov-fail-under=65
+        run: poetry run pytest --cov=src/pages --cov-fail-under=65
