@@ -3,11 +3,13 @@ from unittest import mock
 from streamlit.testing.v1 import AppTest
 import time
 
+
 def mocked_requests_get(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
             self.status_code = status_code
+
         def json(self):
             return self.json_data
 
@@ -33,9 +35,16 @@ def mocked_requests_get(*args, **kwargs):
                     "sunset": "2025-05-03T17:10:39Z"
                 }, 200)
             else:
-                return MockResponse({ "detail": "502: 404 Client Error: Not Found for url" }, 500)
+                error = "502: 404 Client Error: Not Found for url"
+                return MockResponse(
+                    json_data={"detail": error},
+                    status_code=500
+                )
         else:
-            return MockResponse({ "detail": "Not authenticated" }, 401)
+            return MockResponse(
+                json_data={"detail": "Not authenticated"},
+                status_code=401
+            )
     else:
         return MockResponse(None, 404)
 
@@ -47,16 +56,18 @@ def mocked_cookiemanager():
                 return "token"
             else:
                 raise KeyError
-    
+
     class MockCookieManager():
         def get_all(self):
             return MockDict()
 
     return MockCookieManager()
 
+
 class TestDashboard(unittest.TestCase):
 
-    @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
+    @mock.patch('extra_streamlit_components.CookieManager',
+                side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_dashboard(self, mock_get, mock_cookiemanager):
         at = AppTest.from_file("../pages/dashboard.py", default_timeout=15)
@@ -64,7 +75,10 @@ class TestDashboard(unittest.TestCase):
 
         time.sleep(6)
 
-        mock_get.assert_called_once_with(url='http://localhost:8000/weather/Moscow', headers={'Authorization': 'Bearer token'}, timeout=30)
+        mock_get.assert_called_once_with(
+            url='http://localhost:8000/weather/Moscow',
+            headers={'Authorization': 'Bearer token'}, timeout=30
+        )
         mock_cookiemanager.assert_called_once()
 
         expected_metrics = {
@@ -83,7 +97,6 @@ class TestDashboard(unittest.TestCase):
 
         for metric in at.metric:
             assert expected_metrics[metric.label] == metric.value
-
 
         assert len(at.error) == 0
         assert not at.exception

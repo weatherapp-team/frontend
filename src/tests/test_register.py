@@ -3,19 +3,27 @@ from unittest import mock
 from streamlit.testing.v1 import AppTest
 import time
 
+
 def mocked_requests_post(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
             self.status_code = status_code
+
         def json(self):
             return self.json_data
     print(args, kwargs)
     if kwargs['url'] == 'http://localhost:8000/auth/register':
         if kwargs['json']['username'] and kwargs['json']['password']:
-            return MockResponse({ "message": "User created successfully" }, 201)
+            return MockResponse(
+                json_data={"message": "User created successfully"},
+                status_code=201
+            )
         else:
-            return MockResponse({ "detail": "Error: Unprocessable Entity" }, 422)
+            return MockResponse(
+                json_data={"detail": "Error: Unprocessable Entity"},
+                status_code=422
+            )
     else:
         return MockResponse(None, 404)
 
@@ -38,11 +46,18 @@ class TestRegister(unittest.TestCase):
 
         time.sleep(3)
 
-        mock_post.assert_called_once_with(url='http://localhost:8000/auth/register', json={'username': 'testusername', 'password': 'testpass', 'email': 'testemail', 'full_name': 'testfullname'}, timeout=30)
-        mock_success.assert_called_once_with('Registration successful! Redirecting...')
+        mock_post.assert_called_once_with(
+            url='http://localhost:8000/auth/register',
+            json={
+                'username': 'testusername',
+                'password': 'testpass',
+                'email': 'testemail',
+                'full_name': 'testfullname'
+            },
+            timeout=30)
+
+        success_text = 'Registration successful! Redirecting...'
+        mock_success.assert_called_once_with(success_text)
         mock_switch_page.assert_called_once_with("pages/auth.py")
         assert len(at.error) == 0
         assert not at.exception
-
-
-
