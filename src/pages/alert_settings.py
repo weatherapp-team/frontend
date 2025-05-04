@@ -70,9 +70,7 @@ def alert_settings_page():
             if delete_alert(alert['id'], token):
                 st.success("Alert deleted")
                 st.rerun()
-
     st.divider()
-
 
 if __name__ == "__main__":
     alert_settings_page()
