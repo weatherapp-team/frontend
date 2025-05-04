@@ -34,7 +34,7 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
     def test_login(self, m_success, m_post, m_switch_page):
-        at = AppTest.from_file("pages/auth.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 
         at.text_input[0].input("testauth")
@@ -49,7 +49,7 @@ class TestAuth(unittest.TestCase):
             timeout=30
         )
         m_success.assert_called_once_with('Login successful! Redirecting...')
-        m_switch_page.assert_called_once_with("pages/dashboard.py")  # <-- ФИКС
+        m_switch_page.assert_called_once_with("pages/dashboard.py")
         assert len(at.error) == 0
         assert not at.exception
 
@@ -57,7 +57,7 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.error')
     def test_error(self, m_error, m_post, m_switch_page):
-        at = AppTest.from_file("pages/auth.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 
         at.text_input[0].input("testauth")

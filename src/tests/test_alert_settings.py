@@ -85,7 +85,7 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     def test_add_alert(self, m_cookie, m_get, m_post, m_success, m_rerun, m_page_link):
-        at = AppTest.from_file("pages/alert_settings.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()
 
@@ -105,7 +105,7 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     def test_delete_alert(self, m_cookie, m_get, m_delete, m_success, m_rerun, m_page_link):
-        at = AppTest.from_file("pages/alert_settings.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()
 
@@ -119,7 +119,7 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     @mock.patch("streamlit.page_link", side_effect=mocked_page_link)
     def test_show_existing_alerts(self, m_cookie, m_get, m_page_link):
-        at = AppTest.from_file("pages/alert_settings.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()
 

@@ -74,7 +74,7 @@ class TestDashboard(unittest.TestCase):
     @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_dashboard(self, mock_get, mock_cookiemanager, mock_page_link):
-        at = AppTest.from_file("pages/dashboard.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/dashboard.py", default_timeout=15)  # <-- путь исправлен
         at.run()
 
         time.sleep(2)

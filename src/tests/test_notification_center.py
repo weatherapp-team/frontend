@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 from streamlit.testing.v1 import AppTest
 import os
-from datetime import datetime
 
 
 # Мокаем requests.get
@@ -49,7 +48,7 @@ class TestNotificationCenter(unittest.TestCase):
     @mock.patch('streamlit.page_link')  # избегаем switch_page
     def test_notification_display(self, m_page_link, m_cookie, m_get):
         os.environ['API_BASE_URL'] = 'http://localhost:8000'
-        at = AppTest.from_file("pages/notification_center.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/notification_center.py", default_timeout=15)  # <-- путь исправлен
         at.run()
 
         # Проверка заголовка

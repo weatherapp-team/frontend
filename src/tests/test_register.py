@@ -41,7 +41,7 @@ class TestRegister(unittest.TestCase):
     def test_login(self, mock_success, mock_post, mock_switch_page):
         os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
-        at = AppTest.from_file("../pages/register.py", default_timeout=15)
+        at = AppTest.from_file("src/pages/register.py", default_timeout=15)  # <-- путь исправлен
         at.run()
 
         at.text_input[0].input("testusername")
