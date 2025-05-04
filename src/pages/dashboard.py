@@ -6,10 +6,15 @@ import time
 from utilities.wind_direction import deg_to_direction
 from utilities.sidebar import generate_sidebar
 import streamlit as st
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/weather"
 
 def get_data(location: str, token: str, cookie_manager: CookieManager):
     result = requests.get(
-        url=f"http://localhost:8000/weather/{location}",
+        url=f"{API_URL}/{location}",
         headers={'Authorization': f"Bearer {token}"},
         timeout=30
     )

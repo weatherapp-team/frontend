@@ -3,10 +3,15 @@ import requests
 from extra_streamlit_components import CookieManager
 from utilities.sidebar import generate_sidebar
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/alerts/notifications"
 
 def get_notifications(token):
     res = requests.get(
-        "http://localhost:8000/alerts/notifications",
+        API_URL,
         headers={"Authorization": f"Bearer {token}"}
     )
     return res.json() if res.status_code == 200 else []

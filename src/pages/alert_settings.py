@@ -2,8 +2,11 @@ import streamlit as st
 import requests
 from extra_streamlit_components import CookieManager
 from utilities.sidebar import generate_sidebar
+from dotenv import load_dotenv
+import os
 
-API_URL = "http://localhost:8000/alerts"
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/alerts"
 
 def get_alerts(token):
     res = requests.get(API_URL, headers={"Authorization": f"Bearer {token}"})

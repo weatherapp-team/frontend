@@ -2,39 +2,36 @@ import streamlit as st
 from extra_streamlit_components import CookieManager
 import time
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/auth/login"
 
 cookie_manager = CookieManager()
 
-
 def validate_auth_data(username_field, password_field):
     is_error = False
-
     if not username_field[1]:
         username_field[0][0].error("Username is required")
         is_error = True
     elif len(username_field[1]) < 5:
         username_field[0][0].error("Username must be at least 5 characters")
         is_error = True
-
     if not password_field[1]:
         password_field[0][0].error("Password is required")
         is_error = True
     elif len(password_field[1]) < 8:
         password_field[0][0].error("Password must be at least 8 characters")
         is_error = True
-
     return is_error
-
 
 def generate_fields():
     username_ff = st.columns(1)
     username = username_ff[0].text_input("Username")
-
     password_ff = st.columns(1)
     password = password_ff[0].text_input("Password", type="password")
-
     return (username_ff, username), (password_ff, password)
-
 
 def login_page():
     if st.session_state.get("redirect_to_dashboard"):
@@ -74,7 +71,7 @@ def login_page():
             else:
                 st.session_state["submitted"] = False
                 result = requests.post(
-                    url="http://localhost:8000/auth/login",
+                    url=API_URL,
                     json={
                         "username": username,
                         "password": password,
@@ -93,9 +90,6 @@ def login_page():
                     st.rerun()
                 else:
                     st.error(result.json()["detail"])
-
-
-
 
 if __name__ == "__main__":
     login_page()
