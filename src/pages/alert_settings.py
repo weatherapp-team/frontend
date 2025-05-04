@@ -11,7 +11,8 @@ API_URL = f"{os.getenv('API_BASE_URL')}/alerts"
 
 
 def get_alerts(token):
-    res = requests.get(API_URL, headers={"Authorization": f"Bearer {token}"})
+    res = requests.get(API_URL, headers={
+        "Authorization": f"Bearer {token}"})
     return res.json() if res.status_code == 200 else []
 
 
@@ -33,29 +34,16 @@ def delete_alert(alert_id, token):
     return res.ok
 
 
-def alert_settings_page():
-    cookie_manager = CookieManager(key="alerts_cookie")
-    cookies = cookie_manager.get_all(key="alerts_get_all")
-    token = cookie_manager.get("token")
-
-    if cookies == {}:
-        st.stop()
-
-    if not token or st.session_state["logged_out"]:
-        st.session_state["logged_out"] = False
-        st.switch_page("pages/auth.py")
-
-    generate_sidebar(cookie_manager)
-    st.title("Alert Threshold Settings")
-
-    # Add new alert
+def show_alert_form(token):
     st.subheader("Add New Threshold")
     with st.form("add_alert_form"):
         location = st.text_input("Location")
         column_name = st.selectbox(
-            "Field", ["temperature", "humidity", "pressure"]
-        )
-        comparator = st.selectbox("Comparator", [">=", "<=", ">", "<"])
+            "Field",
+            ["temperature", "humidity", "pressure"])
+        comparator = st.selectbox(
+            "Comparator",
+            [">=", "<=", ">", "<"])
         number = st.number_input(
             "Number",
             min_value=-1000,
@@ -79,7 +67,8 @@ def alert_settings_page():
                 else:
                     st.error("Failed to add alert.")
 
-    # Show existing alerts
+
+def show_existing_alerts(token):
     st.subheader("Current Thresholds")
     alerts = get_alerts(token)
     for alert in alerts:
@@ -92,8 +81,26 @@ def alert_settings_page():
             if delete_alert(alert['id'], token):
                 st.success("Alert deleted")
                 st.rerun()
-
     st.divider()
+
+
+def alert_settings_page():
+    cookie_manager = CookieManager(key="alerts_cookie")
+    cookies = cookie_manager.get_all(key="alerts_get_all")
+    token = cookie_manager.get("token")
+
+    if cookies == {}:
+        st.stop()
+
+    if not token or st.session_state["logged_out"]:
+        st.session_state["logged_out"] = False
+        st.switch_page("pages/auth.py")
+
+    generate_sidebar(cookie_manager)
+    st.title("Alert Threshold Settings")
+
+    show_alert_form(token)
+    show_existing_alerts(token)
 
 
 if __name__ == "__main__":

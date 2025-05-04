@@ -61,8 +61,8 @@ def notification_center_page():
                 f"• **Actual value**: {notif['actual_number']}  \n"
                 f"• **Threshold**: {notif['number']}  \n"
                 f"• **Time**: "
-                f"{datetime.fromisoformat(notif['timestamp'])
-                .strftime('%d.%m.%Y %H:%M:%S')}"
+                f"{datetime.fromisoformat(notif['timestamp']).strftime(
+                    '%d.%m.%Y %H:%M:%S')}"
             )
             st.divider()
 
