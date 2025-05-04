@@ -4,6 +4,7 @@ import requests
 from datetime import datetime
 import time
 from utilities.wind_direction import deg_to_direction
+from utilities.sidebar import generate_sidebar
 
 cookie_manager = CookieManager()
 
@@ -80,14 +81,7 @@ def dashboard():
     if "logged_out" not in st.session_state:
         st.session_state["logged_out"] = False
 
-    with st.sidebar:
-        st.page_link(page="pages/dashboard.py", label="Dashboard")
-        if st.button("Log out", type='secondary', use_container_width=True):
-            if cookie_manager.get("token"):
-                cookie_manager.delete("token")
-                st.session_state["logged_out"] = True
-                time.sleep(1)
-                st.switch_page("pages/auth.py")
+    generate_sidebar(cookie_manager)
                 
     if st.session_state["logged_out"]:
         st.session_state["logged_out"] = False

@@ -50,6 +50,7 @@ def login_page():
             if is_error:
                 return
             else:
+                st.session_state["submitted"] = False
                 result = requests.post(
                     url="http://localhost:8000/auth/login",
                     json={
