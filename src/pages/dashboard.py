@@ -5,6 +5,7 @@ from datetime import datetime
 import time
 from utilities.wind_direction import deg_to_direction
 from utilities.sidebar import generate_sidebar
+import streamlit as st
 
 def get_data(location: str, token: str, cookie_manager: CookieManager):
     result = requests.get(
@@ -78,10 +79,11 @@ def dashboard():
     cookies = cookie_manager.get_all(key="dashboard_get_all")
     token = cookies.get("token")
 
-    if token is None:
+    if cookies == {}:
         st.stop()
 
-    if not token:
+    if not token or st.session_state["logged_out"]:
+        st.session_state["logged_out"] = False
         st.switch_page("pages/auth.py")
 
     generate_sidebar(cookie_manager)

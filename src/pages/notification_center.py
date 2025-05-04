@@ -22,15 +22,15 @@ def get_comparator_string(comparator):
 def notification_center_page():
     # UNIQUE keys for each component and call
     cookie_manager = CookieManager(key="notifications_cookie")
-    cookie_manager.get_all(key="notifications_get_all")
+    cookies = cookie_manager.get_all(key="notifications_get_all")
 
     token = cookie_manager.get("token")
 
-    if token is None:
+    if cookies == {}:
         st.stop()
 
-    if not token:
-        st.warning("Please authorize first.")
+    if not token or st.session_state["logged_out"]:
+        st.session_state["logged_out"] = False
         st.switch_page("pages/auth.py")
 
     generate_sidebar(cookie_manager)

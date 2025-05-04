@@ -19,13 +19,14 @@ def delete_alert(alert_id, token):
 
 def alert_settings_page():
     cookie_manager = CookieManager(key="alerts_cookie")
-    cookie_manager.get_all(key="alerts_get_all")
+    cookies = cookie_manager.get_all(key="alerts_get_all")
     token = cookie_manager.get("token")
 
-    if token is None:
+    if cookies == {}:
         st.stop()
 
-    if not token:
+    if not token or st.session_state["logged_out"]:
+        st.session_state["logged_out"] = False
         st.switch_page("pages/auth.py")
 
     generate_sidebar(cookie_manager)
