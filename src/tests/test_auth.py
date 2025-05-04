@@ -2,6 +2,11 @@ import unittest
 from unittest import mock
 from streamlit.testing.v1 import AppTest
 import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_post(*args, **kwargs):
@@ -16,34 +21,27 @@ def mocked_requests_post(*args, **kwargs):
     if kwargs['url'] == 'http://localhost:8000/auth/login':
         username = kwargs['json']['username']
         password = kwargs['json']['password']
-        if (username == 'testauth' and password == 'testpass'):
-            return MockResponse(
-                json_data={"access_token": "token"},
-                status_code=200
-            )
+        if username == 'testauth' and password == 'testpass':
+            return MockResponse({"access_token": "token"}, 200)
         else:
-            return MockResponse(
-                json_data={"detail": "Incorrect username or password"},
-                status_code=401
-            )
-    else:
-        return MockResponse(None, 404)
+            return MockResponse({"detail": "Incorrect username or password"}, 401)
+    return MockResponse(None, 404)
 
 
 class TestAuth(unittest.TestCase):
 
+    @mock.patch('streamlit.switch_page')  # <- важный фикс!
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
-    def test_login(self, m_success, m_post):
-        at = AppTest.from_file("../pages/auth.py", default_timeout=15)
+    def test_login(self, m_success, m_post, m_switch_page):
+        at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 
         at.text_input[0].input("testauth")
         at.text_input[1].input("testpass")
 
         at.button[0].click().run()
-
-        time.sleep(3)
+        time.sleep(1)
 
         m_post.assert_called_once_with(
             url='http://localhost:8000/auth/login',
@@ -51,21 +49,22 @@ class TestAuth(unittest.TestCase):
             timeout=30
         )
         m_success.assert_called_once_with('Login successful! Redirecting...')
+        m_switch_page.assert_called_once_with("pages/dashboard.py")
         assert len(at.error) == 0
         assert not at.exception
 
+    @mock.patch('streamlit.switch_page')
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.error')
-    def test_error(self, m_error, m_post):
-        at = AppTest.from_file("../pages/auth.py", default_timeout=15)
+    def test_error(self, m_error, m_post, m_switch_page):
+        at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 
         at.text_input[0].input("testauth")
         at.text_input[1].input("invalidpass")
 
         at.button[0].click().run()
-
-        time.sleep(3)
+        time.sleep(1)
 
         m_post.assert_called_once_with(
             url='http://localhost:8000/auth/login',
@@ -73,5 +72,6 @@ class TestAuth(unittest.TestCase):
             timeout=30
         )
         m_error.assert_called_once_with('Incorrect username or password')
+        m_switch_page.assert_not_called()
         assert len(at.error) == 0
         assert not at.exception

@@ -7,7 +7,17 @@ def generate_sidebar(cookie_manager):
         st.session_state["logged_out"] = False
 
     with st.sidebar:
-        st.page_link(page="pages/dashboard.py", label="Dashboard")
+        st.page_link(
+            page="pages/dashboard.py",
+            label="Dashboard")
+        st.page_link(
+            page="pages/alert_settings.py",
+            label="Alert Settings")
+        st.page_link(
+            page="pages/notification_center.py",
+            label="Notifications"
+        )
+
         if st.button("Log out", type='secondary', use_container_width=True):
             if cookie_manager.get("token"):
                 cookie_manager.delete("token")

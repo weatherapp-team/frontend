@@ -2,6 +2,12 @@ import streamlit as st
 import time
 import requests
 import re
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/auth/register"
 
 
 def validate_register_data(
@@ -11,34 +17,29 @@ def validate_register_data(
         full_name_field
 ):
     is_error = False
-
     if not username_field[1]:
         username_field[0][0].error("Username is required")
         is_error = True
     elif len(username_field[1]) < 5:
         username_field[0][0].error("Username must be at least 5 characters")
         is_error = True
-
     if not password_field[1]:
         password_field[0][0].error("Password is required")
         is_error = True
     elif len(password_field[1]) < 8:
         password_field[0][0].error("Password must be at least 8 characters")
         is_error = True
-
     if not email_field[1]:
         email_field[0][0].error("Email is required")
         is_error = True
     else:
-        match = re.match("^\\S+@\\S+\\.\\S+$", email_field[1])
+        match = re.match(r"^\S+@\S+\.\S+$", email_field[1])
         if not match:
             email_field[0][0].error("Invalid email format")
             is_error = True
-
     if not full_name_field[1]:
         full_name_field[0][0].error("Full name is required")
         is_error = True
-
     return is_error
 
 
@@ -65,13 +66,13 @@ def generate_fields():
 
 def register_request(username, password, email, full_name):
     result = requests.post(
-        url="http://localhost:8000/auth/register",
+        url=API_URL,
         json={
-                "username": username,
-                "password": password,
-                "email": email,
-                "full_name": full_name
-            },
+            "username": username,
+            "password": password,
+            "email": email,
+            "full_name": full_name
+        },
         timeout=30
     )
     return result
@@ -119,7 +120,7 @@ def register_page():
     text = "Already have an account? "
     link = "<a href=\"/auth\" target=\"_self\">Authorize</a>"
     st.markdown(
-        body=(text+link),
+        body=(text + link),
         unsafe_allow_html=True
     )
 

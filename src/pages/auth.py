@@ -2,13 +2,18 @@ import streamlit as st
 from extra_streamlit_components import CookieManager
 import time
 import requests
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+API_URL = f"{os.getenv('API_BASE_URL')}/auth/login"
 
 cookie_manager = CookieManager()
 
 
 def validate_auth_data(username_field, password_field):
     is_error = False
-
     if not username_field[1]:
         username_field[0][0].error("Username is required")
         is_error = True
@@ -37,11 +42,15 @@ def generate_fields():
 
 
 def login_page():
+    if st.session_state.get("redirect_to_dashboard"):
+        st.session_state.pop("redirect_to_dashboard")
+        st.switch_page("pages/dashboard.py")
+
     st.title("Authorize", anchor=False)
     text = "Do not have an account? "
     link = "<a href=\"/register\" target=\"_self\">Register</a>"
     st.markdown(
-        body=(text+link),
+        body=(text + link),
         unsafe_allow_html=True
     )
 
@@ -70,7 +79,7 @@ def login_page():
             else:
                 st.session_state["submitted"] = False
                 result = requests.post(
-                    url="http://localhost:8000/auth/login",
+                    url=API_URL,
                     json={
                         "username": username,
                         "password": password,
@@ -84,15 +93,11 @@ def login_page():
                         max_age=3600
                     )
                     st.success("Login successful! Redirecting...")
+                    st.session_state["redirect_to_dashboard"] = True
                     time.sleep(3)
                     st.rerun()
                 else:
                     st.error(result.json()["detail"])
-
-    cookies = cookie_manager.get_all()
-
-    if cookies.get("token"):
-        st.switch_page("pages/dashboard.py")
 
 
 if __name__ == "__main__":
