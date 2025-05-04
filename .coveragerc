@@ -1,5 +1,5 @@
 [run]
 omit =
-    src/__init__.py
+    */__init__.py
     */tests/*
     */test_*.py
