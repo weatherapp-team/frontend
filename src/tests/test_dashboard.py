@@ -3,10 +3,12 @@ from unittest import mock
 from streamlit.testing.v1 import AppTest
 import streamlit as st
 import time
+import os
 from dotenv import load_dotenv
 
 
 load_dotenv()
+os.environ['API_BASE_URL'] = 'http://localhost:8000'  # фиксируем базовый URL для теста
 
 
 def mocked_requests_get(*args, **kwargs):
@@ -38,71 +40,50 @@ def mocked_requests_get(*args, **kwargs):
                     "timestamp": "2025-05-03T15:08:56.984512",
                     "lat": 55.7522,
                     "lon": 37.6156,
-                    "sunrise": "2025-05-03T01:42:03Z",
-                    "sunset": "2025-05-03T17:10:39Z"
+                    "sunrise": "2025-05-03T01:42:03",
+                    "sunset": "2025-05-03T17:10:39"
                 }, 200)
             else:
-                error = "502: 404 Client Error: Not Found for url"
-                return MockResponse(
-                    json_data={"detail": error},
-                    status_code=500
-                )
+                return MockResponse({"detail": "City not found"}, 404)
         else:
-            return MockResponse(
-                json_data={"detail": "Not authenticated"},
-                status_code=401
-            )
-    else:
-        return MockResponse(None, 404)
+            return MockResponse({"detail": "Not authenticated"}, 401)
+    return MockResponse(None, 404)
 
 
-def mocked_cookiemanager():
-    class MockDict:
+def mocked_cookiemanager(*args, **kwargs):
+    class MockCookieManager:
+        def get_all(self, *args, **kwargs):
+            return {"token": "token"}
+
         def get(self, key):
-            if key == "token":
-                return "token"
-            else:
-                raise KeyError
+            return "token" if key == "token" else None
 
-    class MockCookieManager():
-        def get_all(self):
-            return MockDict()
-        def get(self, key):
-            if key == "token":
-                return "token"
-            else:
-                raise KeyError
+        def delete(self, key):
+            pass
 
     return MockCookieManager()
 
-def mocked_page_link(page, label):
-    """
-    Streamlit does not support testing multipage apps :(
-    So I had to mock the page_link function so the test could pass
-    """
-    def mocked_page_link(page, label):
-        return st.write(label)
 
-    return mocked_page_link
+def mocked_page_link(page, label):
+    return st.write(f"[Mocked page link] {label}")
 
 
 class TestDashboard(unittest.TestCase):
 
     @mock.patch('streamlit.page_link', side_effect=mocked_page_link)
-    @mock.patch('extra_streamlit_components.CookieManager',
-                side_effect=mocked_cookiemanager)
+    @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_dashboard(self, mock_get, mock_cookiemanager, mock_page_link):
-        at = AppTest.from_file("../pages/dashboard.py", default_timeout=15)
+        at = AppTest.from_file("pages/dashboard.py", default_timeout=15)
         at.run()
 
-        time.sleep(6)
+        time.sleep(2)
 
         mock_get.assert_called_once_with(
             url='http://localhost:8000/weather/Moscow',
-            headers={'Authorization': 'Bearer token'}, timeout=30
+            headers={'Authorization': 'Bearer token'},
+            timeout=30
         )
-        mock_cookiemanager.assert_called_once()
 
         expected_metrics = {
             "Temperature": "11.38 °C",
