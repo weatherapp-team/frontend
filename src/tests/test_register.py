@@ -2,6 +2,12 @@ import unittest
 from unittest import mock
 from streamlit.testing.v1 import AppTest
 import time
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_post(*args, **kwargs):
@@ -12,7 +18,7 @@ def mocked_requests_post(*args, **kwargs):
 
         def json(self):
             return self.json_data
-    print(args, kwargs)
+
     if kwargs['url'] == 'http://localhost:8000/auth/register':
         if kwargs['json']['username'] and kwargs['json']['password']:
             return MockResponse(
@@ -24,8 +30,7 @@ def mocked_requests_post(*args, **kwargs):
                 json_data={"detail": "Error: Unprocessable Entity"},
                 status_code=422
             )
-    else:
-        return MockResponse(None, 404)
+    return MockResponse(None, 404)
 
 
 class TestRegister(unittest.TestCase):
@@ -34,6 +39,8 @@ class TestRegister(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
     def test_login(self, mock_success, mock_post, mock_switch_page):
+        os.environ['API_BASE_URL'] = 'http://localhost:8000'
+
         at = AppTest.from_file("../pages/register.py", default_timeout=15)
         at.run()
 
@@ -44,7 +51,7 @@ class TestRegister(unittest.TestCase):
 
         at.button[0].click().run()
 
-        time.sleep(3)
+        time.sleep(1)
 
         mock_post.assert_called_once_with(
             url='http://localhost:8000/auth/register',
@@ -54,10 +61,10 @@ class TestRegister(unittest.TestCase):
                 'email': 'testemail@bread.example',
                 'full_name': 'testfullname'
             },
-            timeout=30)
+            timeout=30
+        )
 
-        success_text = 'Registration successful! Redirecting...'
-        mock_success.assert_called_once_with(success_text)
+        mock_success.assert_called_once_with('Registration successful! Redirecting...')
         mock_switch_page.assert_called_once_with("pages/auth.py")
         assert len(at.error) == 0
         assert not at.exception

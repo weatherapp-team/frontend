@@ -2,6 +2,12 @@ import unittest
 from unittest import mock
 from streamlit.testing.v1 import AppTest
 import time
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_post(*args, **kwargs):
@@ -16,18 +22,11 @@ def mocked_requests_post(*args, **kwargs):
     if kwargs['url'] == 'http://localhost:8000/auth/login':
         username = kwargs['json']['username']
         password = kwargs['json']['password']
-        if (username == 'testauth' and password == 'testpass'):
-            return MockResponse(
-                json_data={"access_token": "token"},
-                status_code=200
-            )
+        if username == 'testauth' and password == 'testpass':
+            return MockResponse({"access_token": "token"}, 200)
         else:
-            return MockResponse(
-                json_data={"detail": "Incorrect username or password"},
-                status_code=401
-            )
-    else:
-        return MockResponse(None, 404)
+            return MockResponse({"detail": "Incorrect username or password"}, 401)
+    return MockResponse(None, 404)
 
 
 class TestAuth(unittest.TestCase):
@@ -35,6 +34,7 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
     def test_login(self, m_success, m_post):
+        os.environ['API_BASE_URL'] = 'http://localhost:8000'
         at = AppTest.from_file("../pages/auth.py", default_timeout=15)
         at.run()
 
@@ -42,8 +42,7 @@ class TestAuth(unittest.TestCase):
         at.text_input[1].input("testpass")
 
         at.button[0].click().run()
-
-        time.sleep(3)
+        time.sleep(1)
 
         m_post.assert_called_once_with(
             url='http://localhost:8000/auth/login',
@@ -57,6 +56,7 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.error')
     def test_error(self, m_error, m_post):
+        os.environ['API_BASE_URL'] = 'http://localhost:8000'
         at = AppTest.from_file("../pages/auth.py", default_timeout=15)
         at.run()
 
@@ -64,8 +64,7 @@ class TestAuth(unittest.TestCase):
         at.text_input[1].input("invalidpass")
 
         at.button[0].click().run()
-
-        time.sleep(3)
+        time.sleep(1)
 
         m_post.assert_called_once_with(
             url='http://localhost:8000/auth/login',

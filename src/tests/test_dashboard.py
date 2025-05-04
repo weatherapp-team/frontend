@@ -3,6 +3,10 @@ from unittest import mock
 from streamlit.testing.v1 import AppTest
 import streamlit as st
 import time
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 
 def mocked_requests_get(*args, **kwargs):
