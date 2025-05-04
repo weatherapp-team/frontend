@@ -53,14 +53,16 @@ def notification_center_page():
         with st.container():
             st.markdown(
                 f"🔔 **Value `{notif['column_name']}` is "
-                f"{get_comparator_string(notif['comparator'])} than {notif['number']}!**"
+                f"{get_comparator_string(notif['comparator'])} "
+                f"than {notif['number']}!**"
             )
             st.markdown(
                 f"• **Location**: {notif['location']}  \n"
                 f"• **Actual value**: {notif['actual_number']}  \n"
                 f"• **Threshold**: {notif['number']}  \n"
                 f"• **Time**: "
-                f"{datetime.fromisoformat(notif['timestamp']).strftime('%d.%m.%Y %H:%M:%S')}"
+                f"{datetime.fromisoformat(notif['timestamp'])
+                .strftime('%d.%m.%Y %H:%M:%S')}"
             )
             st.divider()
 

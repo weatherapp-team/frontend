@@ -56,7 +56,11 @@ def alert_settings_page():
             "Field", ["temperature", "humidity", "pressure"]
         )
         comparator = st.selectbox("Comparator", [">=", "<=", ">", "<"])
-        number = st.number_input("Number", min_value=-1000, max_value=1000, step=1)
+        number = st.number_input(
+            "Number",
+            min_value=-1000,
+            max_value=1000,
+            step=1)
 
         submitted = st.form_submit_button("Add Alert")
         if submitted:

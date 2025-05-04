@@ -51,8 +51,12 @@ def weather_temp(weather):
 
 def weather_sun(weather):
     col1, col2 = st.columns(2)
-    col1.metric("Sunrise at", datetime.fromisoformat(weather["sunrise"]).strftime("%H:%M"))
-    col2.metric("Sunset at", datetime.fromisoformat(weather["sunset"]).strftime("%H:%M"))
+    col1.metric(
+        "Sunrise at",
+        datetime.fromisoformat(weather["sunrise"]).strftime("%H:%M"))
+    col2.metric(
+        "Sunset at",
+        datetime.fromisoformat(weather["sunset"]).strftime("%H:%M"))
 
 
 def weather_humidity(weather):
@@ -66,7 +70,9 @@ def weather_wind(weather):
     wind_speed.metric("Wind speed", f"{weather['wind_speed']} m/s")
 
     direction = deg_to_direction(weather['wind_deg'])
-    wind_direction.metric("Wind direction", f"{direction} ({weather['wind_deg']} °)")
+    wind_direction.metric(
+        "Wind direction",
+        f"{direction} ({weather['wind_deg']} °)")
 
 
 def dashboard():
