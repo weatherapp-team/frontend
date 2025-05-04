@@ -19,4 +19,4 @@ jobs:
       - name: Run flake8
         run: poetry run flake8
       - name: Run complexity threshold check
-        run: poetry run flake8 --max-complexity 10
+        run: poetry run flake8 --max-complexity 10 --max-function-length 50

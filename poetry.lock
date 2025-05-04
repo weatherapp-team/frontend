@@ -332,6 +332,25 @@ pycodestyle = ">=2.13.0,<2.14.0"
 pyflakes = ">=3.3.0,<3.4.0"
 
 [[package]]
+name = "flake8-max-function-length"
+version = "0.9.0"
+description = "A configurable flake8 plugin to enforce a maximum function/method length."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "flake8_max_function_length-0.9.0-py3-none-any.whl", hash = "sha256:6493eed66d95a22a6cf0fd8b38c99f4a58cec4269f0187453544639351a54e02"},
+    {file = "flake8_max_function_length-0.9.0.tar.gz", hash = "sha256:031d47724cb853fecc16483e6b3445fb1dec620283e568b845eb8c64835d8f73"},
+]
+
+[package.dependencies]
+flake8 = "*"
+
+[package.extras]
+dev = ["pre-commit"]
+release = ["flit", "keyring", "tbump"]
+test = ["pre-commit", "pytest"]
+
+[[package]]
 name = "gitdb"
 version = "4.0.12"
 description = "Git Object Database"
@@ -1528,4 +1547,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "679dd89f56451e1c4bbc958dc6f4d2726435093cfb998c126bb4ef7d328c65c4"
+content-hash = "750bda51e2217e822cb22fca8d954128af34fae61679388aad4991cd8b0822ea"
