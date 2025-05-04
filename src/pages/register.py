@@ -60,15 +60,9 @@ def register_page():
 
     
     username_field, password_field, email_field, full_name_field  = generate_fields()
-    (_, username) = username_field
-    (_, password) = password_field
-    (_, email) = email_field
-    (_, full_name) = full_name_field
-
 
     if st.session_state["submitted"]:
         validate_register_data(username_field, password_field, email_field, full_name_field)
-
 
     if st.button("Register"):
         st.session_state["submitted"] = True
@@ -82,10 +76,10 @@ def register_page():
             result = requests.post(
                 url="http://localhost:8000/auth/register",
                 json={
-                    "username": username,
-                    "password": password,
-                    "email": email,
-                    "full_name": full_name
+                    "username": username_field[1],
+                    "password": password_field[1],
+                    "email": email_field[1],
+                    "full_name": full_name_field[1]
                 },
                 timeout=30
             )
