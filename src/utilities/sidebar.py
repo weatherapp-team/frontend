@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 
+
 def generate_sidebar(cookie_manager):
     if "logged_out" not in st.session_state:
         st.session_state["logged_out"] = False

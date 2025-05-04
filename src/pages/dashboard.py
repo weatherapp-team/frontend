@@ -29,7 +29,10 @@ def get_data(location: str, token: str):
 
 def weather_base_info(weather):
     st1, st2 = st.columns([0.9, 0.1], vertical_alignment="center")
-    st1.subheader(f"{weather['location']}: {weather['main_weather']}", anchor=False)
+    st1.subheader(
+        body=f"{weather['location']}: {weather['main_weather']}",
+        anchor=False
+    )
     st1.text(f"{weather['description']}.".capitalize())
     st2.image(f"https://openweathermap.org/img/wn/{weather['icon']}@2x.png")
 
@@ -82,7 +85,7 @@ def dashboard():
         st.session_state["logged_out"] = False
 
     generate_sidebar(cookie_manager)
-                
+
     if st.session_state["logged_out"]:
         st.session_state["logged_out"] = False
         st.session_state["submitted"] = False

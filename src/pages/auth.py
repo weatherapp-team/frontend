@@ -5,18 +5,26 @@ import requests
 
 cookie_manager = CookieManager()
 
+
 def validate_auth_data(username_field, password_field):
     is_error = False
 
     if not username_field[1]:
         username_field[0][0].error("Username is required")
         is_error = True
+    elif len(username_field[1]) < 5:
+        username_field[0][0].error("Username must be at least 5 characters")
+        is_error = True
 
     if not password_field[1]:
         password_field[0][0].error("Password is required")
         is_error = True
+    elif len(password_field[1]) < 8:
+        password_field[0][0].error("Password must be at least 8 characters")
+        is_error = True
 
     return is_error
+
 
 def generate_fields():
     username_ff = st.columns(1)
@@ -27,9 +35,15 @@ def generate_fields():
 
     return (username_ff, username), (password_ff, password)
 
+
 def login_page():
     st.title("Authorize", anchor=False)
-    st.markdown("Do not have an account? <a href=\"/register\" target=\"_self\">Register</a>", unsafe_allow_html=True)
+    text = "Do not have an account? "
+    link = "<a href=\"/register\" target=\"_self\">Register</a>"
+    st.markdown(
+        body=(text+link),
+        unsafe_allow_html=True
+    )
 
     if "submitted" not in st.session_state:
         st.session_state["submitted"] = False
@@ -38,10 +52,14 @@ def login_page():
     (_, username) = username_field
     (_, password) = password_field
 
+    is_validation_error = False
     if st.session_state["submitted"]:
-        validate_auth_data(username_field, password_field)
+        is_validation_error = validate_auth_data(
+            username_field,
+            password_field
+        )
 
-    if st.button("Submit"):
+    if st.button("Submit") and not is_validation_error:
         with st.spinner("Loading..."):
             st.session_state["submitted"] = True
 
