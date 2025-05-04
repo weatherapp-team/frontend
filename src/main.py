@@ -1,4 +1,12 @@
 import streamlit as st
+from extra_streamlit_components import CookieManager
+
+cookie_manager = CookieManager(key="dashboard_cookie")
+cookies = cookie_manager.get_all(key="dashboard_get_all")
+token = cookies.get("token")
+
+if not token or st.session_state["logged_out"]:
+    st.session_state["logged_out"] = False
 
 pt = st.navigation([
     st.Page(page="pages/dashboard.py", url_path="/dashboard"),
