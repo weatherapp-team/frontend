@@ -31,22 +31,6 @@ def alert_settings_page():
     generate_sidebar(cookie_manager)
     st.title("Alert Threshold Settings")
 
-    # Show existing alerts
-    st.subheader("Current Thresholds")
-    alerts = get_alerts(token)
-    for alert in alerts:
-        col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
-        col1.markdown(f"**Location:** {alert['location']}")
-        col2.markdown(f"**Field:** {alert['column_name']}")
-        col3.markdown(f"**Comparator:** {alert['comparator']}")
-        col4.markdown(f"**Number:** {alert['number']}")
-        if col5.button("❌", key=f"del_{alert['id']}"):
-            if delete_alert(alert['id'], token):
-                st.success("Alert deleted")
-                st.rerun()
-
-    st.divider()
-
     # Add new alert
     st.subheader("Add New Threshold")
     with st.form("add_alert_form"):
@@ -71,6 +55,23 @@ def alert_settings_page():
                     st.rerun()
                 else:
                     st.error("Failed to add alert.")
+
+        # Show existing alerts
+    st.subheader("Current Thresholds")
+    alerts = get_alerts(token)
+    for alert in alerts:
+        col1, col2, col3, col4, col5 = st.columns([3, 2, 2, 2, 1])
+        col1.markdown(f"**Location:** {alert['location']}")
+        col2.markdown(f"**Field:** {alert['column_name']}")
+        col3.markdown(f"**Comparator:** {alert['comparator']}")
+        col4.markdown(f"**Number:** {alert['number']}")
+        if col5.button("❌", key=f"del_{alert['id']}"):
+            if delete_alert(alert['id'], token):
+                st.success("Alert deleted")
+                st.rerun()
+
+    st.divider()
+
 
 if __name__ == "__main__":
     alert_settings_page()
