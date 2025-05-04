@@ -42,32 +42,33 @@ def login_page():
         validate_auth_data(username_field, password_field)
 
     if st.button("Submit"):
-        st.session_state["submitted"] = True
+        with st.spinner("Loading..."):
+            st.session_state["submitted"] = True
 
-        is_error = validate_auth_data(username_field, password_field)
+            is_error = validate_auth_data(username_field, password_field)
 
-        if is_error:
-            return
-        else:
-            result = requests.post(
-                url="http://localhost:8000/auth/login",
-                json={
-                    "username": username,
-                    "password": password,
-                },
-                timeout=30
-            )
-            if result.status_code == 200:
-                cookie_manager.set(
-                    cookie="token",
-                    val=result.json()["access_token"],
-                    max_age=3600
-                )
-                st.success("Login successful! Redirecting...")
-                time.sleep(3)
-                st.rerun()
+            if is_error:
+                return
             else:
-                st.error(result.json()["detail"])
+                result = requests.post(
+                    url="http://localhost:8000/auth/login",
+                    json={
+                        "username": username,
+                        "password": password,
+                    },
+                    timeout=30
+                )
+                if result.status_code == 200:
+                    cookie_manager.set(
+                        cookie="token",
+                        val=result.json()["access_token"],
+                        max_age=3600
+                    )
+                    st.success("Login successful! Redirecting...")
+                    time.sleep(3)
+                    st.rerun()
+                else:
+                    st.error(result.json()["detail"])
 
     cookies = cookie_manager.get_all()
 

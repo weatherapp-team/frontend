@@ -57,7 +57,6 @@ def register_page():
 
     if "submitted" not in st.session_state:
         st.session_state["submitted"] = False
-
     
     username_field, password_field, email_field, full_name_field  = generate_fields()
 
@@ -65,35 +64,36 @@ def register_page():
         validate_register_data(username_field, password_field, email_field, full_name_field)
 
     if st.button("Register"):
-        st.session_state["submitted"] = True
+        with st.spinner("Loading..."):
+            st.session_state["submitted"] = True
 
-        is_error = validate_register_data(username_field, password_field, email_field, full_name_field)
+            is_error = validate_register_data(username_field, password_field, email_field, full_name_field)
 
-        if is_error:
-            return
-        else:
-            st.session_state["submitted"] = False
-            result = requests.post(
-                url="http://localhost:8000/auth/register",
-                json={
-                    "username": username_field[1],
-                    "password": password_field[1],
-                    "email": email_field[1],
-                    "full_name": full_name_field[1]
-                },
-                timeout=30
-            )
-            if result.status_code == 201:
-                st.session_state["registered"] = True
-                st.success("Registration successful! Redirecting...")
-                time.sleep(2)
-                st.rerun()
+            if is_error:
+                return
             else:
-                try:
-                    error = result.json()["detail"]
-                    st.error(error)
-                except:
-                    st.error("Unknown error occurred. Please try again.")
+                st.session_state["submitted"] = False
+                result = requests.post(
+                    url="http://localhost:8000/auth/register",
+                    json={
+                        "username": username_field[1],
+                        "password": password_field[1],
+                        "email": email_field[1],
+                        "full_name": full_name_field[1]
+                    },
+                    timeout=30
+                )
+                if result.status_code == 201:
+                    st.session_state["registered"] = True
+                    st.success("Registration successful! Redirecting...")
+                    time.sleep(2)
+                    st.rerun()
+                else:
+                    try:
+                        error = result.json()["detail"]
+                        st.error(error)
+                    except:
+                        st.error("Unknown error occurred. Please try again.")
 
     if st.session_state["registered"]:
         st.session_state["registered"] = False
