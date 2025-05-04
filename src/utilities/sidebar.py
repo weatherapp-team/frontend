@@ -15,6 +15,6 @@ def generate_sidebar(cookie_manager):
                 time.sleep(1)
                 st.switch_page("pages/auth.py")
 
-        st.session_state["logged_out"] = False
-        st.session_state["submitted"] = False
-        st.switch_page("pages/auth.py")
+            st.session_state["logged_out"] = False
+            st.session_state["submitted"] = False
+            st.switch_page("pages/auth.py")

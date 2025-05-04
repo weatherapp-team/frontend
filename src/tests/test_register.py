@@ -39,7 +39,7 @@ class TestRegister(unittest.TestCase):
 
         at.text_input[0].input("testusername")
         at.text_input[1].input("testpass")
-        at.text_input[2].input("testemail")
+        at.text_input[2].input("testemail@bread.example")
         at.text_input[3].input("testfullname")
 
         at.button[0].click().run()
@@ -51,7 +51,7 @@ class TestRegister(unittest.TestCase):
             json={
                 'username': 'testusername',
                 'password': 'testpass',
-                'email': 'testemail',
+                'email': 'testemail@bread.example',
                 'full_name': 'testfullname'
             },
             timeout=30)

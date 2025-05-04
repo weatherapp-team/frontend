@@ -1,6 +1,7 @@
 import unittest
 from unittest import mock
 from streamlit.testing.v1 import AppTest
+import streamlit as st
 import time
 
 
@@ -62,16 +63,32 @@ def mocked_cookiemanager():
     class MockCookieManager():
         def get_all(self):
             return MockDict()
+        def get(self, key):
+            if key == "token":
+                return "token"
+            else:
+                raise KeyError
 
     return MockCookieManager()
+
+def mocked_page_link(page, label):
+    """
+    Streamlit does not support testing multipage apps :(
+    So I had to mock the page_link function so the test could pass
+    """
+    def mocked_page_link(page, label):
+        return st.write(label)
+
+    return mocked_page_link
 
 
 class TestDashboard(unittest.TestCase):
 
+    @mock.patch('streamlit.page_link', side_effect=mocked_page_link)
     @mock.patch('extra_streamlit_components.CookieManager',
                 side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
-    def test_dashboard(self, mock_get, mock_cookiemanager):
+    def test_dashboard(self, mock_get, mock_cookiemanager, mock_page_link):
         at = AppTest.from_file("../pages/dashboard.py", default_timeout=15)
         at.run()
 
