@@ -8,6 +8,9 @@ def generate_sidebar(cookie_manager):
 
     with st.sidebar:
         st.page_link(page="pages/dashboard.py", label="Dashboard")
+        st.page_link(page="pages/alert_settings.py", label="alerts")
+        st.page_link(page="pages/notification_center.py", label="notifications")
+
         if st.button("Log out", type='secondary', use_container_width=True):
             if cookie_manager.get("token"):
                 cookie_manager.delete("token")

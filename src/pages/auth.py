@@ -37,6 +37,10 @@ def generate_fields():
 
 
 def login_page():
+    if st.session_state.get("redirect_to_dashboard"):
+        st.session_state.pop("redirect_to_dashboard")
+        st.switch_page("pages/dashboard.py")
+
     st.title("Authorize", anchor=False)
     text = "Do not have an account? "
     link = "<a href=\"/register\" target=\"_self\">Register</a>"
@@ -84,15 +88,12 @@ def login_page():
                         max_age=3600
                     )
                     st.success("Login successful! Redirecting...")
-                    time.sleep(3)
+                    st.session_state["redirect_to_dashboard"] = True
                     st.rerun()
                 else:
                     st.error(result.json()["detail"])
 
-    cookies = cookie_manager.get_all()
 
-    if cookies.get("token"):
-        st.switch_page("pages/dashboard.py")
 
 
 if __name__ == "__main__":
