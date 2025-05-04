@@ -29,6 +29,7 @@ def generate_fields():
 
 def login_page():
     st.title("Authorize", anchor=False)
+    st.markdown("Do not have an account? <a href=\"/register\" target=\"_self\">Register</a>", unsafe_allow_html=True)
 
     if "submitted" not in st.session_state:
         st.session_state["submitted"] = False

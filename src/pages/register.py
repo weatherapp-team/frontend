@@ -50,6 +50,7 @@ def generate_fields():
 
 def register_page():
     st.title("Register", anchor=False)
+    st.markdown("Already have an account? <a href=\"/auth\" target=\"_self\">Authorize</a>", unsafe_allow_html=True)
 
     if "registered" not in st.session_state:
         st.session_state["registered"] = False
