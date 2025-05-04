@@ -5,20 +5,33 @@ from utilities.sidebar import generate_sidebar
 from dotenv import load_dotenv
 import os
 
+
 load_dotenv()
 API_URL = f"{os.getenv('API_BASE_URL')}/alerts"
+
 
 def get_alerts(token):
     res = requests.get(API_URL, headers={"Authorization": f"Bearer {token}"})
     return res.json() if res.status_code == 200 else []
 
+
 def add_alert(alert, token):
-    res = requests.post(API_URL, json=alert, headers={"Authorization": f"Bearer {token}"})
+    res = requests.post(
+        API_URL,
+        json=alert,
+        headers={"Authorization": f"Bearer {token}"}
+    )
     return res.ok
 
+
 def delete_alert(alert_id, token):
-    res = requests.delete(API_URL, json={"id": alert_id}, headers={"Authorization": f"Bearer {token}"})
+    res = requests.delete(
+        API_URL,
+        json={"id": alert_id},
+        headers={"Authorization": f"Bearer {token}"}
+    )
     return res.ok
+
 
 def alert_settings_page():
     cookie_manager = CookieManager(key="alerts_cookie")
@@ -39,7 +52,9 @@ def alert_settings_page():
     st.subheader("Add New Threshold")
     with st.form("add_alert_form"):
         location = st.text_input("Location")
-        column_name = st.selectbox("Field", ["temperature", "humidity", "pressure"])
+        column_name = st.selectbox(
+            "Field", ["temperature", "humidity", "pressure"]
+        )
         comparator = st.selectbox("Comparator", [">=", "<=", ">", "<"])
         number = st.number_input("Number", min_value=-1000, max_value=1000, step=1)
 
@@ -60,7 +75,7 @@ def alert_settings_page():
                 else:
                     st.error("Failed to add alert.")
 
-        # Show existing alerts
+    # Show existing alerts
     st.subheader("Current Thresholds")
     alerts = get_alerts(token)
     for alert in alerts:
@@ -73,7 +88,9 @@ def alert_settings_page():
             if delete_alert(alert['id'], token):
                 st.success("Alert deleted")
                 st.rerun()
+
     st.divider()
+
 
 if __name__ == "__main__":
     alert_settings_page()
