@@ -11,8 +11,11 @@ API_URL = f"{os.getenv('API_BASE_URL')}/alerts"
 
 
 def get_alerts(token):
-    res = requests.get(API_URL, headers={
-        "Authorization": f"Bearer {token}"})
+    res = requests.get(
+        API_URL,
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=30
+    )
     return res.json() if res.status_code == 200 else []
 
 
@@ -20,7 +23,8 @@ def add_alert(alert, token):
     res = requests.post(
         API_URL,
         json=alert,
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=30
     )
     return res.ok
 
@@ -29,7 +33,8 @@ def delete_alert(alert_id, token):
     res = requests.delete(
         API_URL,
         json={"id": alert_id},
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=30
     )
     return res.ok
 

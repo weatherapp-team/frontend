@@ -14,7 +14,8 @@ API_URL = f"{os.getenv('API_BASE_URL')}/alerts/notifications"
 def get_notifications(token):
     res = requests.get(
         API_URL,
-        headers={"Authorization": f"Bearer {token}"}
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=30
     )
     return res.json() if res.status_code == 200 else []
 
