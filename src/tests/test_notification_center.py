@@ -4,7 +4,6 @@ from streamlit.testing.v1 import AppTest
 import os
 
 
-# Мокаем requests.get
 def mocked_requests_get(*args, **kwargs):
     class MockResponse:
         def __init__(self, json_data, status_code):
@@ -14,7 +13,7 @@ def mocked_requests_get(*args, **kwargs):
         def json(self):
             return self.json_data
 
-    url = args[0]  # URL передаётся как первый аргумент
+    url = args[0]
     if url.endswith("/alerts/notifications"):
         return MockResponse([
             {
@@ -29,7 +28,6 @@ def mocked_requests_get(*args, **kwargs):
     return MockResponse(None, 404)
 
 
-# Мокаем CookieManager
 def mocked_cookiemanager(*args, **kwargs):
     class MockCookie:
         def get_all(self, key=None):
@@ -48,13 +46,11 @@ class TestNotificationCenter(unittest.TestCase):
     @mock.patch('streamlit.page_link')  # избегаем switch_page
     def test_notification_display(self, m_page_link, m_cookie, m_get):
         os.environ['API_BASE_URL'] = 'http://localhost:8000'
-        at = AppTest.from_file("src/pages/notification_center.py", default_timeout=15)  # <-- путь исправлен
+        at = AppTest.from_file("src/pages/notification_center.py", default_timeout=15)
         at.run()
 
-        # Проверка заголовка
         assert at.title[0].value == "Alert Notifications"
 
-        # Проверка наличия информации об алёрте
         assert any("temperature" in m.value.lower() for m in at.markdown)
         assert any("Moscow" in m.value for m in at.markdown)
         assert any("Actual value" in m.value for m in at.markdown)

@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-os.environ['API_BASE_URL'] = 'http://localhost:8000'  # фиксируем базовый URL для теста
+os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_get(*args, **kwargs):
@@ -74,7 +74,7 @@ class TestDashboard(unittest.TestCase):
     @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_dashboard(self, mock_get, mock_cookiemanager, mock_page_link):
-        at = AppTest.from_file("src/pages/dashboard.py", default_timeout=15)  # <-- путь исправлен
+        at = AppTest.from_file("src/pages/dashboard.py", default_timeout=15)
         at.run()
 
         time.sleep(2)
