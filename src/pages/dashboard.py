@@ -28,7 +28,7 @@ def get_data(location: str, token: str):
 
 def weather_base_info(weather):
     st1, st2 = st.columns([0.9, 0.1], vertical_alignment="center")
-    st1.subheader(f"{weather['location']}: {weather['main_weather']}")
+    st1.subheader(f"{weather['location']}: {weather['main_weather']}", anchor=False)
     st1.text(f"{weather['description']}.".capitalize())
     st2.image(f"https://openweathermap.org/img/wn/{weather['icon']}@2x.png")
 
@@ -73,12 +73,29 @@ def weather_wind(weather):
 
 
 def dashboard():
-    cookies = cookie_manager.get_all()
+    cookie_manager.get_all()
 
     input = st.text_input("Location", value="Moscow")
 
+    if "logged_out" not in st.session_state:
+        st.session_state["logged_out"] = False
+
+    with st.sidebar:
+        st.page_link(page="pages/dashboard.py", label="Dashboard")
+        if st.button("Log out", type='secondary', use_container_width=True):
+            if cookie_manager.get("token"):
+                cookie_manager.delete("token")
+                st.session_state["logged_out"] = True
+                time.sleep(1)
+                st.switch_page("pages/auth.py")
+                
+    if st.session_state["logged_out"]:
+        st.session_state["logged_out"] = False
+        st.session_state["submitted"] = False
+        st.switch_page("pages/auth.py")
+
     with st.spinner("Loading..."):
-        weather = get_data(input, cookies.get("token"))
+        weather = get_data(input, cookie_manager.get("token"))
 
         if weather:
             weather_base_info(weather)
