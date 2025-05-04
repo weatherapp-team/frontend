@@ -20,7 +20,7 @@ def get_comparator_string(comparator):
     }.get(comparator, comparator)
 
 def notification_center_page():
-    # ✅ УНИКАЛЬНЫЕ ключи для каждого компонента и вызова
+    # UNIQUE keys for each component and call
     cookie_manager = CookieManager(key="notifications_cookie")
     cookie_manager.get_all(key="notifications_get_all")
 
