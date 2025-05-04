@@ -89,6 +89,7 @@ def login_page():
                     )
                     st.success("Login successful! Redirecting...")
                     st.session_state["redirect_to_dashboard"] = True
+                    time.sleep(3)
                     st.rerun()
                 else:
                     st.error(result.json()["detail"])
