@@ -57,13 +57,14 @@ def notification_center_page():
                 f"{get_comparator_string(notif['comparator'])} "
                 f"than {notif['number']}!**"
             )
+            date = datetime.fromisoformat(notif['timestamp'])
+            time = date.strftime('%d.%m.%Y %H:%M:%S')
             st.markdown(
                 f"• **Location**: {notif['location']}  \n"
                 f"• **Actual value**: {notif['actual_number']}  \n"
                 f"• **Threshold**: {notif['number']}  \n"
                 f"• **Time**: "
-                f"{datetime.fromisoformat(notif['timestamp']).strftime(
-                    '%d.%m.%Y %H:%M:%S')}"
+                f"{time}"
             )
             st.divider()
 
