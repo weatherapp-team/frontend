@@ -34,6 +34,8 @@ def history():
 
     generate_sidebar(cookie_manager)
 
+    st.title("Weather History")
+
     input = st.text_input("Location", value="Moscow")
 
     with st.spinner("Loading..."):
