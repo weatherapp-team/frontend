@@ -83,7 +83,7 @@ def dashboard():
     if cookies == {}:
         st.stop()
 
-    if not token or st.session_state["logged_out"]:
+    if not token or st.session_state.get("logged_out"):
         st.session_state["logged_out"] = False
         st.switch_page("pages/auth.py")
 
