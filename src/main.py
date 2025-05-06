@@ -11,5 +11,7 @@ pt = st.navigation([
     st.Page(page="pages/register.py", url_path="/register")
 ])
 
+if "logged_out" not in st.session_state:
+    st.session_state["logged_out"] = False
 
 pt.run()
