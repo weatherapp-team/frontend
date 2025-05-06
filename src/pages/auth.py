@@ -13,6 +13,9 @@ cookie_manager = CookieManager()
 
 
 def validate_auth_data(username_field, password_field):
+    """
+    Validates user input for login form.
+    """
     is_error = False
     if not username_field[1]:
         username_field[0][0].error("Username is required")
@@ -32,6 +35,10 @@ def validate_auth_data(username_field, password_field):
 
 
 def generate_fields():
+    """
+    Generates input fields for auth form.
+    Columns are used to display validation errors
+    """
     username_ff = st.columns(1)
     username = username_ff[0].text_input("Username")
 
@@ -42,6 +49,9 @@ def generate_fields():
 
 
 def login_page():
+    """
+    Generates login page
+    """
     if st.session_state.get("redirect_to_dashboard"):
         st.session_state.pop("redirect_to_dashboard")
         st.switch_page("pages/dashboard.py")

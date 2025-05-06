@@ -16,6 +16,9 @@ def validate_register_data(
         email_field,
         full_name_field
 ):
+    """
+    Validates data for the registration form.
+    """
     is_error = False
     if not username_field[1]:
         username_field[0][0].error("Username is required")
@@ -44,6 +47,10 @@ def validate_register_data(
 
 
 def generate_fields():
+    """
+    Generates input fields for registration form.
+    Columns are used to display validation errors
+    """
     username_ff = st.columns(1)
     username = username_ff[0].text_input("Username")
 
@@ -65,6 +72,9 @@ def generate_fields():
 
 
 def register_request(username, password, email, full_name):
+    """
+    Sends registration request to the API
+    """
     result = requests.post(
         url=API_URL,
         json={
@@ -84,6 +94,9 @@ def submit_function(
     email_field,
     full_name_field
 ):
+    """
+    Processes user registration request and sends it to the API
+    """
     st.session_state["submitted"] = True
 
     is_error = validate_register_data(
@@ -116,6 +129,9 @@ def submit_function(
 
 
 def register_page():
+    """
+    Renders registration page
+    """
     st.title("Register", anchor=False)
     text = "Already have an account? "
     link = "<a href=\"/auth\" target=\"_self\">Authorize</a>"

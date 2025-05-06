@@ -10,6 +10,9 @@ os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_post(*args, **kwargs):
+    """
+    Authorization request mock
+    """
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -34,6 +37,9 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
     def test_login(self, m_success, m_post, m_switch_page):
+        """
+        Tests user authorization
+        """
         at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 
@@ -57,6 +63,9 @@ class TestAuth(unittest.TestCase):
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.error')
     def test_error(self, m_error, m_post, m_switch_page):
+        """
+        Tests user authorization with invalid credentials
+        """
         at = AppTest.from_file("src/pages/auth.py", default_timeout=15)  # <-- Фикс пути
         at.run()
 

@@ -3,6 +3,9 @@ import time
 
 
 def generate_sidebar(cookie_manager):
+    """
+    Generates sidebar
+    """
     if "logged_out" not in st.session_state:
         st.session_state["logged_out"] = False
 

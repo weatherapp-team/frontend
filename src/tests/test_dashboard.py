@@ -12,6 +12,9 @@ os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_get(*args, **kwargs):
+    """
+    Dashboard data request mock
+    """
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -51,6 +54,9 @@ def mocked_requests_get(*args, **kwargs):
 
 
 def mocked_cookiemanager(*args, **kwargs):
+    """
+    CookieManager mock
+    """
     class MockCookieManager:
         def get_all(self, *args, **kwargs):
             return {"token": "token"}
@@ -65,6 +71,9 @@ def mocked_cookiemanager(*args, **kwargs):
 
 
 def mocked_page_link(page, label):
+    """
+    Page link mock
+    """
     return st.write(f"[Mocked page link] {label}")
 
 
@@ -74,6 +83,9 @@ class TestDashboard(unittest.TestCase):
     @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
     @mock.patch('requests.get', side_effect=mocked_requests_get)
     def test_dashboard(self, mock_get, mock_cookiemanager, mock_page_link):
+        """
+        Tests dashboard data loading
+        """
         at = AppTest.from_file("src/pages/dashboard.py", default_timeout=15)
         at.run()
 

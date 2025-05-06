@@ -11,6 +11,9 @@ API_URL = f"{os.getenv('API_BASE_URL')}/alerts"
 
 
 def get_alerts(token):
+    """
+    Gets alerts list from the API
+    """
     res = requests.get(
         API_URL,
         headers={"Authorization": f"Bearer {token}"},
@@ -20,6 +23,9 @@ def get_alerts(token):
 
 
 def add_alert(alert, token):
+    """
+    Adds alert using API
+    """
     res = requests.post(
         API_URL,
         json=alert,
@@ -30,6 +36,9 @@ def add_alert(alert, token):
 
 
 def delete_alert(alert_id, token):
+    """
+    Deletes alert using API
+    """
     res = requests.delete(
         API_URL,
         json={"id": alert_id},
@@ -40,6 +49,10 @@ def delete_alert(alert_id, token):
 
 
 def show_alert_form(token):
+    """
+    Renders form for adding alerts
+    It contains fields and the submission procedure
+    """
     st.subheader("Add New Threshold")
     with st.form("add_alert_form"):
         location = st.text_input("Location")
@@ -74,6 +87,10 @@ def show_alert_form(token):
 
 
 def show_existing_alerts(token):
+    """
+    Renders existing alerts from the list.
+    The list is received automatically via API
+    """
     st.subheader("Current Thresholds")
     alerts = get_alerts(token)
     for alert in alerts:
@@ -90,6 +107,9 @@ def show_existing_alerts(token):
 
 
 def alert_settings_page():
+    """
+    Renders Alert Settings page
+    """
     cookie_manager = CookieManager(key="alerts_cookie")
     cookies = cookie_manager.get_all(key="alerts_get_all")
     token = cookie_manager.get("token")

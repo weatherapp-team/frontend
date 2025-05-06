@@ -10,6 +10,9 @@ os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_get(*args, **kwargs):
+    """
+    Alerts endpoint mock
+    """
     class MockResponse:
         def __init__(self, json_data, status_code):
             self._json_data = json_data
@@ -33,6 +36,9 @@ def mocked_requests_get(*args, **kwargs):
 
 
 def mocked_requests_post(*args, **kwargs):
+    """
+    Alert creation endpoint mock
+    """
     class MockResponse:
         def __init__(self, status_code):
             self.status_code = status_code
@@ -45,6 +51,9 @@ def mocked_requests_post(*args, **kwargs):
 
 
 def mocked_requests_delete(*args, **kwargs):
+    """
+    Alert deletion endpoint mock
+    """
     class MockResponse:
         def __init__(self, status_code):
             self.status_code = status_code
@@ -57,12 +66,9 @@ def mocked_requests_delete(*args, **kwargs):
 
 
 def mocked_cookiemanager(*args, **kwargs):
-    class MockCookies:
-        def get(self, key):
-            if key == "token":
-                return "token"
-            raise KeyError(key)
-
+    """
+    CookieManager mock
+    """
     class MockCookieManager:
         def get_all(self, *args, **kwargs):
             return {"token": "token"}
@@ -73,6 +79,9 @@ def mocked_cookiemanager(*args, **kwargs):
 
 
 def mocked_page_link(page, label):
+    """
+    Page link mock
+    """
     return st.write(label)
 
 
@@ -85,6 +94,9 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     def test_add_alert(self, m_cookie, m_get, m_post, m_success, m_rerun, m_page_link):
+        """
+        Tests alert creation
+        """
         at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()
@@ -105,6 +117,9 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("requests.get", side_effect=mocked_requests_get)
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     def test_delete_alert(self, m_cookie, m_get, m_delete, m_success, m_rerun, m_page_link):
+        """
+        Tests alert deletion
+        """
         at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()
@@ -119,6 +134,9 @@ class TestAlertSettings(unittest.TestCase):
     @mock.patch("extra_streamlit_components.CookieManager", side_effect=mocked_cookiemanager)
     @mock.patch("streamlit.page_link", side_effect=mocked_page_link)
     def test_show_existing_alerts(self, m_cookie, m_get, m_page_link):
+        """
+        Tests showing existing alerts
+        """
         at = AppTest.from_file("src/pages/alert_settings.py", default_timeout=15)
         at.session_state["logged_out"] = False
         at.run()

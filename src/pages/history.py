@@ -12,6 +12,9 @@ API_URL = f"{os.getenv('API_BASE_URL')}/weather"
 
 
 def get_weather_history(token, location):
+    """
+    Gets weather history for the provided location, from the API
+    """
     res = requests.get(
         f"{API_URL}/{location}/history",
         headers={"Authorization": f"Bearer {token}"},
@@ -21,6 +24,9 @@ def get_weather_history(token, location):
 
 
 def history():
+    """
+    Renders Weather History page
+    """
     cookie_manager = CookieManager(key="dashboard_cookie")
     cookies = cookie_manager.get_all(key="dashboard_get_all")
     token = cookies.get("token")

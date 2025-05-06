@@ -5,6 +5,9 @@ import os
 
 
 def mocked_requests_get(*args, **kwargs):
+    """
+    Notifications list request mock
+    """
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -29,6 +32,9 @@ def mocked_requests_get(*args, **kwargs):
 
 
 def mocked_cookiemanager(*args, **kwargs):
+    """
+    CookieManager mock
+    """
     class MockCookie:
         def get_all(self, key=None):
             return {"token": "token"}
@@ -45,6 +51,9 @@ class TestNotificationCenter(unittest.TestCase):
     @mock.patch('extra_streamlit_components.CookieManager', side_effect=mocked_cookiemanager)
     @mock.patch('streamlit.page_link')  # избегаем switch_page
     def test_notification_display(self, m_page_link, m_cookie, m_get):
+        """
+        Tests notification center rendering
+        """
         os.environ['API_BASE_URL'] = 'http://localhost:8000'
         at = AppTest.from_file("src/pages/notification_center.py", default_timeout=15)
         at.run()

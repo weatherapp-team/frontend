@@ -11,6 +11,9 @@ os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
 
 def mocked_requests_post(*args, **kwargs):
+    """
+    Registration request mock
+    """
     class MockResponse:
         def __init__(self, json_data, status_code):
             self.json_data = json_data
@@ -38,7 +41,10 @@ class TestRegister(unittest.TestCase):
     @mock.patch('streamlit.switch_page')
     @mock.patch('requests.post', side_effect=mocked_requests_post)
     @mock.patch('streamlit.success')
-    def test_login(self, mock_success, mock_post, mock_switch_page):
+    def test_register(self, mock_success, mock_post, mock_switch_page):
+        """
+        Tests registration process
+        """
         os.environ['API_BASE_URL'] = 'http://localhost:8000'
 
         at = AppTest.from_file("src/pages/register.py", default_timeout=15)

@@ -14,6 +14,9 @@ API_URL = f"{os.getenv('API_BASE_URL')}/weather"
 
 
 def get_data(location: str, token: str, cookie_manager: CookieManager):
+    """
+    Gets data for the dashboard metrics
+    """
     result = requests.get(
         url=f"{API_URL}/{location}",
         headers={'Authorization': f"Bearer {token}"},
@@ -32,6 +35,10 @@ def get_data(location: str, token: str, cookie_manager: CookieManager):
 
 
 def weather_base_info(weather):
+    """
+    Renders basic info about the weather.
+    It shows description of current weather and title of the location
+    """
     st1, st2 = st.columns([0.9, 0.1], vertical_alignment="center")
     st1.subheader(
         body=f"{weather['location']}: {weather['main_weather']}",
@@ -42,6 +49,10 @@ def weather_base_info(weather):
 
 
 def weather_temp(weather):
+    """
+    Renders temperature info about the weather.
+    It shows four temperature metrics
+    """
     temp_col1, temp_col2, temp_col3, temp_col4 = st.columns(4)
     temp_col1.metric("Temperature", f"{weather['temperature']} °C")
     temp_col2.metric("Feels like", f"{weather['temperature_feels_like']} °C")
@@ -50,6 +61,9 @@ def weather_temp(weather):
 
 
 def weather_sun(weather):
+    """
+    Renders info about sunrise and sunset
+    """
     col1, col2 = st.columns(2)
     col1.metric(
         "Sunrise at",
@@ -60,12 +74,18 @@ def weather_sun(weather):
 
 
 def weather_humidity(weather):
+    """
+    Renders info about humidity
+    """
     humidity, pressure = st.columns(2)
     humidity.metric("Humidity", f"{weather['humidity']} %")
     pressure.metric("Pressure", f"{weather['pressure']} hPa")
 
 
 def weather_wind(weather):
+    """
+    Renders info about wind speed and direction
+    """
     wind_speed, wind_direction = st.columns(2)
     wind_speed.metric("Wind speed", f"{weather['wind_speed']} m/s")
 
@@ -76,6 +96,9 @@ def weather_wind(weather):
 
 
 def dashboard():
+    """
+    Renders dashboard page
+    """
     cookie_manager = CookieManager(key="dashboard_cookie")
     cookies = cookie_manager.get_all(key="dashboard_get_all")
     token = cookies.get("token")

@@ -12,6 +12,9 @@ API_URL = f"{os.getenv('API_BASE_URL')}/alerts/notifications"
 
 
 def get_notifications(token):
+    """
+    Gets notifications from the API
+    """
     res = requests.get(
         API_URL,
         headers={"Authorization": f"Bearer {token}"},
@@ -21,6 +24,9 @@ def get_notifications(token):
 
 
 def get_comparator_string(comparator):
+    """
+    Returns human-readable string from the provided comparator
+    """
     return {
         ">=": "greater or equal to",
         "<=": "less or equal to",
@@ -30,6 +36,9 @@ def get_comparator_string(comparator):
 
 
 def notification_center_page():
+    """
+    Renders notification center page
+    """
     cookie_manager = CookieManager(key="notifications_cookie")
     cookies = cookie_manager.get_all(key="notifications_get_all")
 
