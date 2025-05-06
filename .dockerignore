@@ -1,0 +1,9 @@
+.flake8
+.gitignore
+.env.example
+.pytest_cache/
+.git/
+htmlcov/
+src/tests/
+**/__pycache__
+**/*.pyc
