@@ -1,6 +1,4 @@
 import streamlit as st
-from extra_streamlit_components import CookieManager
-
 
 pt = st.navigation([
     st.Page(page="pages/dashboard.py", url_path="/dashboard"),
