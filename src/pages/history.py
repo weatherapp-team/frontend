@@ -45,12 +45,12 @@ def history():
     input = st.text_input("Location", value="Moscow")
 
     with st.spinner("Loading..."):
-        history = get_weather_history(token, input)
-        if not history:
+        weather_history = get_weather_history(token, input)
+        if not weather_history:
             st.info("No weather history yet for this location.")
             return
 
-        for element in history:
+        for element in weather_history:
             with st.container():
                 date = datetime.fromisoformat(element['timestamp'])
                 time = date.strftime('%d.%m.%Y %H:%M:%S')

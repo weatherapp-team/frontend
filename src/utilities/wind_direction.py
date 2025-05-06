@@ -30,6 +30,7 @@ def n_dir(deg):
         return "ENE"
     elif 348.75 <= deg < 360:
         return "N"
+    return ""
 
 
 def e_dir(deg):
@@ -44,6 +45,7 @@ def e_dir(deg):
         return "SE"
     elif 146.25 <= deg < 168.75:
         return "SSE"
+    return ""
 
 
 def s_dir(deg):
@@ -58,6 +60,7 @@ def s_dir(deg):
         return "SW"
     elif 236.25 <= deg < 258.75:
         return "WSW"
+    return ""
 
 
 def w_dir(deg):
@@ -72,3 +75,4 @@ def w_dir(deg):
         return "NW"
     elif 326.25 <= deg < 348.75:
         return "NNW"
+    return ""
